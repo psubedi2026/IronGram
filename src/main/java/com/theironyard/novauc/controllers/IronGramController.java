@@ -1,15 +1,14 @@
 package com.theironyard.novauc.controllers;
 
+import com.sun.javafx.binding.StringFormatter;
 import com.theironyard.novauc.entities.Photo;
 import com.theironyard.novauc.entities.User;
 import com.theironyard.novauc.services.PhotoRepository;
 import com.theironyard.novauc.services.UserRepository;
 import com.theironyard.novauc.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+//import org.springframework.messaging.handler.annotation;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.*;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -83,7 +85,9 @@ public class IronGramController {
             HttpSession session,
             HttpServletResponse response,
             String receiver,
-            MultipartFile photo
+            MultipartFile photo,
+            int delay,
+            boolean isPublic
     ) throws Exception {
         String username = (String) session.getAttribute("username");
         if (username == null) {
@@ -109,6 +113,8 @@ public class IronGramController {
         p.setSender(senderUser);
         p.setRecipient(receiverUser);
         p.setFilename(photoFile.getName());
+        p.setDelay(delay);
+        p.setPublicPhoto(isPublic);
         photos.save(p);
 
         response.sendRedirect("/");
@@ -125,9 +131,42 @@ public class IronGramController {
         }
 
         User user = users.findFirstByName(username);
-        return photos.findByRecipient(user);
+        return  photos.findByRecipient(user);
     }
 
 
+    @RequestMapping("/photosdisplay/{filename}")
+    public void showPhoto(HttpSession session, HttpServletResponse response,@PathVariable String filename) throws Exception {
 
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("Not logged in.");
+        }
+        String realFileName=String.format("%s.jpg",filename);
+        Photo thisPhoto = photos.findFirstByFilename(realFileName);
+        session.setAttribute("thisPhoto", thisPhoto);
+        response.sendRedirect("/");
+    }
+
+    @RequestMapping("/sessionPhoto")
+    public Photo realShow(HttpSession session){
+        return (Photo)session.getAttribute("thisPhoto");
+    }
+
+    @RequestMapping("/delete")
+    public void autoDelete(HttpSession session, HttpServletResponse response)throws Exception{
+        Photo thisPhoto=(Photo) session.getAttribute("thisPhoto");
+        int delay = thisPhoto.getDelay()*1000;
+        Thread.sleep(delay);
+        String actualPath= String.format("/Users/souporman/Code/IronGram/public/%s",thisPhoto.getFilename());
+        Path pathToPhoto = Paths.get(actualPath);
+        Files.delete(pathToPhoto);
+        photos.delete(thisPhoto.getId());
+        response.reset();
+    }
+//
+//    @RequestMapping("/reload")
+//    public void reloader()throws Exception{
+//        Thread.sleep(10000);
+//    }
 }
