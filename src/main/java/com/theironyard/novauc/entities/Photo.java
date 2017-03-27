@@ -1,6 +1,8 @@
 package com.theironyard.novauc.entities;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Created by psubedi2020 on 3/21/17.
@@ -16,18 +18,25 @@ public class Photo {
     User sender;
 
     @ManyToOne
-    User recipient;
+    User receiver;
 
     @Column(nullable = false)
     String filename;
 
+    int timer;
+
+    String isPublic;
+
     public Photo() {
     }
 
-    public Photo(User sender, User recipient, String filename) {
+    public Photo(int id, User sender, User receiver, String filename, int timer, String isPublic) {
+        this.id = id;
         this.sender = sender;
-        this.recipient = recipient;
+        this.receiver = receiver;
         this.filename = filename;
+        this.timer = timer;
+        this.isPublic = isPublic;
     }
 
     public int getId() {
@@ -46,12 +55,12 @@ public class Photo {
         this.sender = sender;
     }
 
-    public User getRecipient() {
-        return recipient;
+    public User getReceiver() {
+        return receiver;
     }
 
-    public void setRecipient(User recipient) {
-        this.recipient = recipient;
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 
     public String getFilename() {
@@ -60,6 +69,22 @@ public class Photo {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
+
+    public String getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(String isPublic) {
+        this.isPublic = isPublic;
     }
 }
 

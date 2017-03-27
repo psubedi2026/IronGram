@@ -9,6 +9,8 @@ import org.springframework.data.repository.CrudRepository;
  * Created by psubedi2020 on 3/21/17.
  */
 public interface PhotoRepository extends CrudRepository<Photo, Integer> {
-    List<Photo> findByRecipient(User name);
+    List<Photo> findByReceiver(User user);
+    List<Photo> findByIsPublic(String isPublic);
+
 }
 

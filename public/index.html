@@ -1,10 +1,17 @@
+<!DOCTYPE html>
 <html>
+<head>
+<title>Rambo</title>
+
+</head>
+
 <body>
 <form action="/login" method="post" id="login" hidden>
-    <input type="text" placeholder="Username" name="username"/>
-    <input type="password" placeholder="Password" name="password"/>
+    <input type="text" placeholder="User Name" name="username">
+    <input type="password" placeholder="Password" name="password">
     <button type="submit">Login</button>
 </form>
+
 
 <form action="/logout" method="post" id="logout" hidden>
     <button type="submit">Logout</button>
@@ -12,14 +19,21 @@
 
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="upload" hidden>
-    <input type="text" placeholder="Receiver name" name="receiver"/>
-    <input type="file" name="photo"/>
+    <input type="text" placeholder="Receiver name" name="receiver">
+    <input type="file" name="photo">
+    <label for="checkbox1" style="float:middle">Make it public?</label>
+    <input type="checkbox" placeholder="Make it public?" name="isPublic" value="notNull">
+    <div>Self Destruct? <input type="number" name="timer"></div>
     <button type="submit">Upload</button>
 </form>
 
-<div id="photos"></div>
+
+<button type="submit" id="view" hidden>View Photos</button>
+<div id="photos" hidden><div id="timer_div"></div></div>
+
 
 <script src="jquery-3.2.0.min.js"></script>
 <script src="main.js"></script>
+
 </body>
 </html>
