@@ -1,6 +1,5 @@
 package com.theironyard.novauc.services;
 
-import com.theironyard.novauc.entities.Photo;
 import com.theironyard.novauc.entities.User;
 import org.springframework.data.repository.CrudRepository;
 
