@@ -70,7 +70,7 @@ public class IronGramController {
         response.sendRedirect("/");
         return user;
     }
-
+//kndfkfbsnj
     @RequestMapping("/logout")
     public void logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.invalidate();
